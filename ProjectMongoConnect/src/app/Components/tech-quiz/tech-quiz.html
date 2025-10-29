@@ -1,0 +1,59 @@
+<div class="tech-quiz-container">
+  <h2>Technology Quiz</h2>
+
+  <p>Select a topic to start the quiz:</p>
+  @if (technologies$ | async; as technologies) {
+  <div class="tech-list">
+    @for (tech of technologies; track tech._id) {
+    <button (click)="selectTechnology(tech.name)" [class.active]="(selectedTopicName$ | async) === tech.name">
+      {{ tech.name }}
+    </button>
+    }
+  </div>
+  } @else {
+  <p class="placeholder">Loading technologies...</p>
+  }
+
+
+  @if (currentQuestion$ | async; as question) {
+  <div class="quiz-container">
+
+    <div class="quiz-header">
+      <h2>{{ (selectedTopicName$ | async) }} Quiz</h2>
+      <p>
+        Question {{ (currentIndexObservable$ | async)! + 1 }} of {{ totalCount$ | async }}
+      </p>
+    </div>
+
+    <div class="question-box">
+      <h3 (click)="toggleAnswer()" class="question-text">
+        {{ question.question }}
+      </h3>
+
+      @if (showAnswer) {
+      <div class="answer-text">
+        <p>{{ question.answer }}</p>
+      </div>
+      }
+    </div>
+
+    <div class="navigation-buttons">
+      <button (click)="previous()" [disabled]="(currentIndexObservable$ | async) === 0">
+        Previous
+      </button>
+
+      <button (click)="next()" [disabled]="(currentIndexObservable$ | async) === (totalCount$ | async)! - 1">
+        Next
+      </button>
+    </div>
+
+  </div>
+  } @else {
+  @if (technologies$ | async; as technologies) {
+  @if (technologies.length > 0) {
+  <p class="placeholder">Please select a technology topic above.</p>
+  }
+  }
+  }
+
+</div>

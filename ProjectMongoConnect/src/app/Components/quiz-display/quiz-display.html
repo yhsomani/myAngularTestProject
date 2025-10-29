@@ -1,0 +1,40 @@
+@if ((currentQuiz$ | async); as quiz) {
+<div class="quiz-container">
+
+  <div class="quiz-header">
+    <h2>Quiz Time!</h2>
+    <p>
+      Question {{ (currentIndexObservable$ | async)! + 1 }} of {{ totalCount$ | async }}
+    </p>
+  </div>
+
+  <div class="question-box">
+    <h3 (click)="toggleAnswer()" class="question-text">
+      {{ quiz.question }}
+    </h3>
+
+    @if (showAnswer) {
+<div class="answer-text">
+      <p>{{ quiz.answer }}</p>
+    </div>
+}
+  </div>
+
+  <div class="navigation-buttons">
+    <button (click)="previous()" [disabled]="(currentIndexObservable$ | async) === 0">
+      Previous
+    </button>
+
+    <button (click)="next()" [disabled]="(currentIndexObservable$ | async) === (totalCount$ | async)! - 1">
+      Next
+    </button>
+  </div>
+
+</div>
+} @else {
+
+  <p class="text-center">Loading quiz...</p>
+
+}
+
+

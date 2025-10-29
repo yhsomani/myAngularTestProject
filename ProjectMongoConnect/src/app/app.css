@@ -1,0 +1,9 @@
+/* You can add this to your main styles.css or keep it here */
+.nav-link-button {
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.nav-link-button:hover {
+  text-decoration: underline;
+}

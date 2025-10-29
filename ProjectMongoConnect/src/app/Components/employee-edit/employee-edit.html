@@ -1,0 +1,73 @@
+<div class="form-container">
+  <h2>Edit Employee</h2>
+
+  @if (editForm) {
+<form [formGroup]="editForm" (ngSubmit)="onUpdate()" novalidate>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name" class="form-control">
+      @if (submitted && myForm['name'].errors) {
+<div class="invalid-feedback">
+        @if (myForm['name'].errors['required']) {
+<span>Name is required.</span>
+}
+      </div>
+}
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" class="form-control">
+      @if (submitted && myForm['email'].errors) {
+<div class="invalid-feedback">
+        @if (myForm['email'].errors['required']) {
+<span>Email is required.</span>
+}
+        @if (myForm['email'].errors['pattern']) {
+<span>Invalid email format.</span>
+}
+      </div>
+}
+    </div>
+
+    <div class="form-group">
+      <label for="designation">Designation</label>
+      <select id="designation" formControlName="designation" class="form-control"
+        (change)="updateProfile($event.target)">
+        <option value="" disabled>Choose designation</option>
+        @for (profile of EmployeeProfile; track profile) {
+<option [value]="profile">{{ profile }}</option>
+}
+      </select>
+      @if (submitted && myForm['designation'].errors) {
+<div class="invalid-feedback">
+        @if (myForm['designation'].errors['required']) {
+<span>Designation is required.</span>
+}
+      </div>
+}
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="text" id="phoneNumber" formControlName="phoneNumber" class="form-control">
+      @if (submitted && myForm['phoneNumber'].errors) {
+<div class="invalid-feedback">
+        @if (myForm['phoneNumber'].errors['required']) {
+<span>Phone number is required.</span>
+}
+        @if (myForm['phoneNumber'].errors['pattern']) {
+<span>Only numbers are allowed.</span>
+}
+      </div>
+}
+    </div>
+
+    <div class="form-group submit-btn">
+      <button type="submit" class="btn btn-primary">Update Employee</button>
+    </div>
+
+  </form>
+}
+</div>

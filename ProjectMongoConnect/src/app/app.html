@@ -1,0 +1,24 @@
+<nav class="navbar">
+  <a class="nav-brand" routerLink="/">My App</a>
+
+  @if (isLoggedIn$ | async) {
+  <!-- Show when logged in -->
+  <div class="nav-links">
+    <a routerLink="/employees-list" routerLinkActive="active">Employee List</a>
+    <a routerLink="/create-employee" routerLinkActive="active">Add Employee</a>
+    <a routerLink="/quiz" routerLinkActive="active">Quiz</a>
+    <a routerLink="/tech-quiz" routerLinkActive="active">Tech Quiz</a>
+    <a (click)="logout()" class="nav-link-button">Logout</a>
+  </div>
+  } @else {
+  <!-- Show when logged out -->
+  <div class="nav-links">
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+    <a routerLink="/register" routerLinkActive="active">Register</a>
+  </div>
+  }
+</nav>
+
+<div class="container">
+  <router-outlet />
+</div>
