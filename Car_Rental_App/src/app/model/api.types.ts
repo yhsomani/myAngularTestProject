@@ -52,9 +52,3 @@ export interface CarModel {
   carImage: string;
   regNo: string;
 }
-
-export interface APIResponse {
-  message: string;
-  result: boolean;
-  data: any;
-}

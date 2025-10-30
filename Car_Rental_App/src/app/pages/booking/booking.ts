@@ -44,7 +44,7 @@ const EMPTY_FILTER: BookingFilter = {
   toBookingDate: '',
 };
 
-const EMPTY_BOOKING: Booking = {
+const createEmptyBooking = (): Booking => ({
   bookingId: 0,
   bookingDate: formatDate(new Date(), 'yyyy-MM-dd', 'en-US'),
   discount: 0,
@@ -57,7 +57,7 @@ const EMPTY_BOOKING: Booking = {
   carId: 0,
   customerCity: '',
   email: '',
-};
+});
 
 @Component({
   selector: 'app-booking',
@@ -76,7 +76,7 @@ export class BookingComponent implements OnInit {
   cars = signal<CarModel[]>([]);
 
   filter = { ...EMPTY_FILTER }; // Use simple object for 2-way binding
-  newBooking = signal<Booking>({ ...EMPTY_BOOKING });
+  newBooking = signal<Booking>(createEmptyBooking());
 
   isLoading = signal(false);
   notification = signal<Notification | null>(null);
@@ -155,15 +155,10 @@ export class BookingComponent implements OnInit {
 
   applyFilter() {
     this.isLoading.set(true);
-    // Create a clean filter object, removing empty values
-    const cleanFilter: BookingFilter = {};
-    (Object.entries(this.filter) as [keyof BookingFilter, string | number][]).forEach(([key, value]) => {
-      if (value) {
-        cleanFilter[key] = value;
-      }
-    });
 
-    this.carRentalService.filterBookings(cleanFilter).subscribe({
+    // FIX: Reverted to sending the full filter object.
+    // The API expects all keys, even if they are empty strings.
+    this.carRentalService.filterBookings(this.filter).subscribe({
       next: (bookings) => {
         this.bookings.set(bookings);
         this.isLoading.set(false);
@@ -209,7 +204,7 @@ export class BookingComponent implements OnInit {
 
   resetNewBooking(form: NgForm) {
     form.resetForm();
-    this.newBooking.set({ ...EMPTY_BOOKING });
+    this.newBooking.set(createEmptyBooking());
   }
 
   handleDeleteConfirm() {

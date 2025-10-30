@@ -5,10 +5,7 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   standalone: true, // Set component to standalone
   imports: [RouterOutlet], // Import dependencies
-  template: `
-    <!-- The entire app's routing is handled here -->
-    <router-outlet />
-  `,
+  templateUrl: './app.html', // FIX: Use templateUrl instead of inline template
   changeDetection: ChangeDetectionStrategy.OnPush, // Improve performance
 })
 export class AppComponent {

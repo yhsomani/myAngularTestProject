@@ -52,6 +52,7 @@ export class VehicleComponent implements OnInit {
     "%3Ctext%20x='50'%20y='35'%20font-size='12'%20fill='%23666'%20text-anchor='middle'%3ENo%20Image%3C/text%3E%3C/svg%3E";
   private currentYear = new Date().getFullYear();
   private http = inject(HttpClient);
+  // FIX: Use the relative proxy path, not the full URL
   private apiBaseUrl = '/api/CarRentalApp';
 
   ngOnInit(): void {
@@ -214,7 +215,7 @@ export class VehicleComponent implements OnInit {
     }
 
     try {
-      if (url.startsWith('data:')) return url;
+      if (url.startsWith('data:image')) return url;
 
       let fullUrl = url;
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
@@ -301,7 +302,7 @@ export class VehicleComponent implements OnInit {
     if (!this.isValidUrl(car.carImage)) {
       this.showNotification(
         'error',
-        'Please enter a valid image URL (jpg, png, gif, webp) or leave it empty.'
+        'Please enter a valid image URL (jpg, png, gif, webp) or data URL.'
       );
       return false;
     }
@@ -320,6 +321,11 @@ export class VehicleComponent implements OnInit {
 
   private isValidUrl(url: string): boolean {
     if (!url) return true; // URL is optional
+
+    if (url.startsWith('data:image')) {
+      return true;
+    }
+
     try {
       new URL(url);
       return url.match(/\.(jpeg|jpg|png|gif|webp)$/i) !== null;

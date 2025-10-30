@@ -9,12 +9,19 @@ import {
   Customer,
   DashboardData,
 } from '../model/api.types';
+import { Capacitor } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CarRentalService {
-  private baseUrl = '/api/CarRentalApp';
+  private get isNative() {
+    return Capacitor.isNativePlatform();
+  }
+  // Use the relative proxy path
+  private baseUrl = this.isNative
+    ? 'https://freeapi.miniprojectideas.com/api/CarRentalApp'
+    : '/api/CarRentalApp';
 
   constructor(private http: HttpClient) { }
 
@@ -103,7 +110,7 @@ export class CarRentalService {
   deleteCustomer(id: number): Observable<{ success: boolean; message: string }> {
     const params = new HttpParams().set('id', id.toString());
     return this.http
-      // API endpoint has typo in docs: 'DeletCustomerById'
+      // FIX: Revert to the API's actual endpoint name (with typo)
       .delete<ApiResponse<any>>(`${this.baseUrl}/DeletCustomerById`, { params })
       .pipe(
         map((response) => ({
@@ -122,7 +129,7 @@ export class CarRentalService {
   // Booking APIs
   getAllBookings(): Observable<Booking[]> {
     return this.http
-      // API endpoint has typo in docs: 'geAllBookings'
+      // FIX: Revert to the API's actual endpoint name (with typo)
       .get<ApiResponse<Booking[]>>(`${this.baseUrl}/geAllBookings`)
       .pipe(
         map((response) => (response.result ? response.data || [] : [])),
@@ -145,7 +152,7 @@ export class CarRentalService {
   getBookingsByCustomerId(custId: number): Observable<Booking[]> {
     const params = new HttpParams().set('custId', custId.toString());
     return this.http
-      // API endpoint has typo in docs: 'geAllBookingsByCustomerId'
+      // FIX: Revert to the API's actual endpoint name (with typo)
       .get<ApiResponse<Booking[]>>(`${this.baseUrl}/geAllBookingsByCustomerId`, {
         params,
       })
@@ -192,7 +199,7 @@ export class CarRentalService {
   deleteBooking(id: number): Observable<{ success: boolean; message: string }> {
     const params = new HttpParams().set('id', id.toString());
     return this.http
-      // API endpoint has typo in docs: 'DeletBookingById'
+      // FIX: Revert to the API's actual endpoint name (with typo)
       .delete<ApiResponse<any>>(`${this.baseUrl}/DeletBookingById`, { params })
       .pipe(
         map((response) => ({

@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
+    // FIX: Remove the 'getDashboardData' call and calculate revenue manually
     forkJoin({
       bookings: this.carRentalService
         .getAllBookings()
@@ -43,21 +44,24 @@ export class DashboardComponent implements OnInit {
         .pipe(catchError(() => of([] as Customer[]))),
     }).subscribe({
       next: ({ bookings, customers }) => {
-        // Calculate dashboard data from bookings and customers
+        // --- Manual Revenue Calculation ---
         const today = new Date();
+        // Compare year, month, and day to find today's bookings
         const todaysBookings = bookings.filter(b => {
           const bookingDate = new Date(b.bookingDate);
           return bookingDate.getFullYear() === today.getFullYear() &&
-                 bookingDate.getMonth() === today.getMonth() &&
-                 bookingDate.getDate() === today.getDate();
+            bookingDate.getMonth() === today.getMonth() &&
+            bookingDate.getDate() === today.getDate();
         });
 
+        // Sum the total amount for those bookings
         const todayTotalAmount = todaysBookings.reduce((sum, b) => sum + b.totalBillAmount, 0);
+        // --- End of Calculation ---
 
         this.dashboardData.set({
-          todayTotalAmount: todayTotalAmount,
-          totalBookings: bookings.length,
-          totalCustomers: customers.length,
+          todayTotalAmount: todayTotalAmount, // Use the calculated value
+          totalBookings: bookings.length,     // Use the count from the full list
+          totalCustomers: customers.length,  // Use the count from the full list
         });
 
         // Set All Bookings and Customers
@@ -81,7 +85,6 @@ export class DashboardComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        // This will run if forkJoin itself has an issue (which is unlikely with catchError)
         console.error('Critical dashboard load error:', err);
         this.isLoading.set(false);
         this.errorMessage.set(
